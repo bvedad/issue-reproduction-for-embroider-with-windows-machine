@@ -1,0 +1,46 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  run-on-windows:
+    runs-on: windows-latest
+
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+
+      - name: Start ember application on windows
+        shell: bash
+        run: |
+          cd ember-consumer-app
+          # install dependencies
+          yarn install --frozen-lockfile
+          yarn start --live-reload=false >./ember-development-server.log 2>./ember-development-server.log &
+          timeout 30 bash -c 'while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' localhost:4200)" != "200" ]]; do sleep 5; done' || (cat ./ember-development-server.log && echo "Ember development server did not started successfully" && false)
+
+  run-on-ubuntu:
+    runs-on: ubuntu-latest
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+      - name: Start ember application on ubuntu
+        shell: bash
+        run: |
+          cd ember-consumer-app
+          # install dependencies
+          yarn install --frozen-lockfile
+          yarn start --live-reload=false >./ember-development-server.log 2>./ember-development-server.log &
+          timeout 30 bash -c 'while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' localhost:4200)" != "200" ]]; do sleep 5; done' || (cat ./ember-development-server.log && echo "Ember development server did not started successfully" && false)
