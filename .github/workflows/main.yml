@@ -29,7 +29,7 @@ jobs:
           # install dependencies
           yarn install --frozen-lockfile
           yarn start --live-reload=false >./ember-development-server.log 2>./ember-development-server.log &
-          timeout 30 bash -c 'while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' localhost:4200)" != "200" ]]; do sleep 5; done' || (cat ./ember-development-server.log && echo "Ember development server did not started successfully" && false)
+          timeout 60 bash -c 'while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' localhost:4200)" != "200" ]]; do sleep 5; done' || (cat ./ember-development-server.log && echo "Ember development server did not started successfully" && false)
 
   run-on-ubuntu:
     runs-on: ubuntu-latest
@@ -43,4 +43,4 @@ jobs:
           # install dependencies
           yarn install --frozen-lockfile
           yarn start --live-reload=false >./ember-development-server.log 2>./ember-development-server.log &
-          timeout 30 bash -c 'while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' localhost:4200)" != "200" ]]; do sleep 5; done' || (cat ./ember-development-server.log && echo "Ember development server did not started successfully" && false)
+          timeout 60 bash -c 'while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' localhost:4200)" != "200" ]]; do sleep 5; done' || (cat ./ember-development-server.log && echo "Ember development server did not started successfully" && false)
